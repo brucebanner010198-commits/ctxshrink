@@ -18,7 +18,10 @@ from ..safety import SafetyPolicy, check_safety
 
 __all__ = ["reduce"]
 
-_HEADER_RE = re.compile(r"^(diff --git|index |--- |\+\+\+ |@@ |new file|deleted file|old mode|new mode|similarity index|rename (from|to))")
+_HEADER_RE = re.compile(
+    r"^(diff --git|index |--- |\+\+\+ |@@ |new file|deleted file|"
+    r"old mode|new mode|similarity index|rename (from|to))"
+)
 _CHANGE_RE = re.compile(r"^[+-](?![+-]{2})")
 
 DEFAULT_CONTEXT = 3

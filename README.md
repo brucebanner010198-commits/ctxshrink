@@ -1,5 +1,7 @@
 # ctxshrink
 
+[![CI](https://github.com/brucebanner010198-commits/ctxshrink/actions/workflows/ci.yml/badge.svg)](https://github.com/brucebanner010198-commits/ctxshrink/actions/workflows/ci.yml)
+
 Shrink prompts and code context for AI coding assistants, without losing meaning.
 
 ctxshrink counts tokens, detects content type, and applies deterministic,
@@ -233,14 +235,37 @@ run the JavaScript CLI instead (`docker run ctxshrink:local js benchmark`).
 ## Project layout
 
 ```
-python/ctxshrink/     Python package (pip install -e ./python)
-js/                    JavaScript package (npm install, in js/)
-dashboard/             Static dashboard assets shared by both CLIs
-benchmarks/fixtures/   Sample files used by `ctxshrink benchmark`
-tests/python/          pytest suite
+python/ctxshrink/      Python package (pip install -e ./python)
+js/                     JavaScript package (npm install, in js/)
+dashboard/              Static dashboard assets shared by both CLIs
+benchmarks/fixtures/    Sample files used by `ctxshrink benchmark`
+tests/python/           pytest suite
 js/test/                node:test suite
+scripts/check_parity.py Cross-language regression guard (see Development)
+.github/workflows/      CI: lint, test, parity check, Docker build
 Dockerfile, docker-compose.yml, docker-entrypoint.sh
 ```
+
+## Development
+
+```bash
+# Python: install with dev extras, lint, test
+pip install -e ".[dev]"
+ruff check python/ tests/
+pytest tests/python -q
+
+# JavaScript: install, test
+cd js && npm ci && npm test
+
+# Cross-language parity: fails if Python and JS disagree on token counts,
+# content-type detection, or the reduction method chosen for any fixture
+python3 scripts/check_parity.py
+```
+
+CI (`.github/workflows/ci.yml`) runs on every push and pull request to
+`main`: pytest across Python 3.9/3.11/3.13 with `ruff check`, `node --test`
+across Node 18/20/22, the parity check above, and a Docker build with a
+smoke test of both CLIs through the built image.
 
 ## Design notes
 

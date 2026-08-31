@@ -141,7 +141,12 @@ def _cmd_benchmark(args: argparse.Namespace) -> int:
 def _cmd_dashboard(args: argparse.Namespace) -> int:
     from .dashboard import serve
 
-    serve(host=args.host, port=args.port, metrics_file=args.metrics_file, open_browser=not args.no_browser)
+    serve(
+        host=args.host,
+        port=args.port,
+        metrics_file=args.metrics_file,
+        open_browser=not args.no_browser,
+    )
     return 0
 
 
@@ -155,9 +160,13 @@ def build_parser() -> argparse.ArgumentParser:
 
     p_count = sub.add_parser("count", help="count tokens")
     p_count.add_argument("file", nargs="?", help="file to read (default: stdin)")
-    p_count.add_argument("--exact", action="store_true", help="use an exact BPE counter if available")
+    p_count.add_argument(
+        "--exact", action="store_true", help="use an exact BPE counter if available"
+    )
     p_count.add_argument("--model", default="auto", help="model/encoding name for --exact")
-    p_count.add_argument("--json", action="store_true", help="print a JSON object instead of a bare number")
+    p_count.add_argument(
+        "--json", action="store_true", help="print a JSON object instead of a bare number"
+    )
     p_count.set_defaults(func=_cmd_count)
 
     p_analyze = sub.add_parser("analyze", help="detect content type and print text statistics")
@@ -175,9 +184,15 @@ def build_parser() -> argparse.ArgumentParser:
         help="0 none, 1 lossless, 2 conservative (default), 3 aggressive",
     )
     p_compress.add_argument("--type", help="override content-type detection")
-    p_compress.add_argument("--stats", action="store_true", help="print a one-line stats summary to stderr")
-    p_compress.add_argument("--stats-only", action="store_true", help="print only the JSON stats, not the text")
-    p_compress.add_argument("--json", action="store_true", help="print text + stats as one JSON object")
+    p_compress.add_argument(
+        "--stats", action="store_true", help="print a one-line stats summary to stderr"
+    )
+    p_compress.add_argument(
+        "--stats-only", action="store_true", help="print only the JSON stats, not the text"
+    )
+    p_compress.add_argument(
+        "--json", action="store_true", help="print text + stats as one JSON object"
+    )
     p_compress.set_defaults(func=_cmd_compress)
 
     p_toon = sub.add_parser("toon", help="the TOON re-encoder")
@@ -192,16 +207,24 @@ def build_parser() -> argparse.ArgumentParser:
     p_toon_decode.add_argument("file", nargs="?", help="file to read (default: stdin)")
     p_toon_decode.set_defaults(func=_cmd_toon_decode)
 
-    p_levels = sub.add_parser("levels", help="print the optimization level / safety class reference")
+    p_levels = sub.add_parser(
+        "levels", help="print the optimization level / safety class reference"
+    )
     p_levels.set_defaults(func=_cmd_levels)
 
     p_bench = sub.add_parser("benchmark", help="run the bundled fixture corpus and report savings")
     p_bench.add_argument("--fixtures", help="path to a fixtures directory (default: bundled)")
     p_bench.add_argument(
-        "--levels", type=int, nargs="+", default=[1, 2, 3], help="levels to benchmark (default 1 2 3)"
+        "--levels",
+        type=int,
+        nargs="+",
+        default=[1, 2, 3],
+        help="levels to benchmark (default 1 2 3)",
     )
     p_bench.add_argument("--json", action="store_true", help="print the report as JSON")
-    p_bench.add_argument("--save", help="write the JSON report to this path (also used by the dashboard)")
+    p_bench.add_argument(
+        "--save", help="write the JSON report to this path (also used by the dashboard)"
+    )
     p_bench.set_defaults(func=_cmd_benchmark)
 
     p_dash = sub.add_parser("dashboard", help="serve the local metrics dashboard")

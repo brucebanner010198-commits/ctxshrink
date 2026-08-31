@@ -32,7 +32,9 @@ DEFAULT_ARRAY_THRESHOLD = 12
 def _walk(value: Any, head: int, tail: int, threshold: int, protected: bool, changed: list) -> Any:
     if isinstance(value, dict):
         return {
-            k: _walk(v, head, tail, threshold, protected or bool(_INTERESTING_KEY_RE.search(k)), changed)
+            k: _walk(
+                v, head, tail, threshold, protected or bool(_INTERESTING_KEY_RE.search(k)), changed
+            )
             for k, v in value.items()
         }
     if isinstance(value, list):

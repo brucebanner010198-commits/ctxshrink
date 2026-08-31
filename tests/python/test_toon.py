@@ -5,7 +5,6 @@ from __future__ import annotations
 import json
 
 import pytest
-
 from ctxshrink.toon import toon_decode, toon_encode
 
 
