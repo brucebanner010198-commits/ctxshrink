@@ -1,0 +1,33 @@
+services:
+  dashboard:
+    build: .
+    image: ctxshrink:local
+    command: ["dashboard", "--host", "0.0.0.0", "--no-browser"]
+    ports:
+      - "8877:8877"
+    environment:
+      # Overrides the fixtures bundled inside the image so the mounted
+      # directory below is what benchmark/dashboard actually read; edit a
+      # file under ./benchmarks/fixtures and refresh the dashboard, no
+      # rebuild needed.
+      CTXSHRINK_FIXTURES_DIR: /app/benchmarks/fixtures
+    volumes:
+      - ./benchmarks/fixtures:/app/benchmarks/fixtures:ro
+
+  benchmark:
+    build: .
+    image: ctxshrink:local
+    command: ["benchmark"]
+    profiles: ["tools"]
+    environment:
+      CTXSHRINK_FIXTURES_DIR: /app/benchmarks/fixtures
+    volumes:
+      - ./benchmarks/fixtures:/app/benchmarks/fixtures:ro
+
+  cli:
+    build: .
+    image: ctxshrink:local
+    entrypoint: ["docker-entrypoint.sh"]
+    command: ["--help"]
+    profiles: ["tools"]
+    stdin_open: true

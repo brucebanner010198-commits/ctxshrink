@@ -1,0 +1,56 @@
+diff --git a/src/orders/service.py b/src/orders/service.py
+index 3f2a1b7..9c1d0aa 100644
+--- a/src/orders/service.py
++++ b/src/orders/service.py
+@@ -1,15 +1,17 @@
+ import logging
+ from decimal import Decimal
++from typing import Optional
+ 
+ logger = logging.getLogger(__name__)
+ 
+ 
+ class OrderService:
+     def __init__(self, repository):
+         self.repository = repository
+ 
+-    def total(self, order_id):
++    def total(self, order_id: str) -> Optional[Decimal]:
+         order = self.repository.get(order_id)
++        if order is None:
++            return None
+         items = order.items
+         subtotal = sum(item.price * item.qty for item in items)
+         tax = subtotal * Decimal("0.0825")
+@@ -20,10 +22,15 @@ class OrderService:
+         return subtotal + tax
+ 
+     def apply_discount(self, order_id, code):
+         order = self.repository.get(order_id)
+         discount = self.repository.get_discount(code)
+-        if discount.expired:
++        if discount is None:
++            raise ValueError("unknown discount code")
++        if discount.expired:
+             raise ValueError("discount expired")
+         order.discount = discount
+         self.repository.save(order)
+         return order
++
++    def cancel(self, order_id):
++        order = self.repository.get(order_id)
++        order.status = "cancelled"
++        self.repository.save(order)
++        return order
+diff --git a/tests/test_service.py b/tests/test_service.py
+index a1b2c3d..e4f5a6b 100644
+--- a/tests/test_service.py
++++ b/tests/test_service.py
+@@ -10,6 +10,7 @@ class TestOrderService:
+     def test_total(self):
+         service = OrderService(FakeRepository())
+         assert service.total("order-1") == Decimal("108.25")
++        assert service.total("missing") is None
+ 
+     def test_apply_discount(self):
+         service = OrderService(FakeRepository())

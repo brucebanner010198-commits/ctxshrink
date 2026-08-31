@@ -1,0 +1,52 @@
+[build-system]
+requires = ["hatchling>=1.21"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ctxshrink"
+version = "0.1.0"
+description = "Shrink prompts and code context for AI coding assistants without losing meaning."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "ctxshrink contributors" }]
+requires-python = ">=3.9"
+keywords = ["llm", "tokens", "context", "compression", "toon", "prompt-engineering"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Topic :: Text Processing",
+]
+dependencies = []
+
+[project.optional-dependencies]
+fast = ["tiktoken>=0.7"]
+dev = ["pytest>=7.4", "tiktoken>=0.7"]
+
+[project.scripts]
+ctxshrink = "ctxshrink.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/brucebanner010198-commits/ctxshrink"
+
+[tool.hatch.build.targets.wheel]
+packages = ["python/ctxshrink"]
+
+# Ships the fixture corpus and dashboard assets inside the wheel, so
+# `ctxshrink benchmark` / `ctxshrink dashboard` work for a normal
+# `pip install ctxshrink` too, not only from a checkout of this repository.
+[tool.hatch.build.targets.wheel.force-include]
+"benchmarks/fixtures" = "ctxshrink/_fixtures"
+"dashboard" = "ctxshrink/_dashboard"
+
+[tool.pytest.ini_options]
+pythonpath = ["python"]
+testpaths = ["tests/python"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]

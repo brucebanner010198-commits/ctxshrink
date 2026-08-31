@@ -1,0 +1,40 @@
+{
+  "name": "ctxshrink",
+  "version": "0.1.0",
+  "description": "Shrink prompts and code context for AI coding assistants without losing meaning.",
+  "type": "module",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./benchmark": "./src/benchmark.js",
+    "./dashboard": "./src/dashboard.js"
+  },
+  "bin": {
+    "ctxshrink": "./bin/ctxshrink.mjs"
+  },
+  "files": [
+    "src",
+    "bin",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test \"test/**/*.test.js\"",
+    "cli": "node bin/ctxshrink.mjs"
+  },
+  "keywords": [
+    "llm",
+    "tokens",
+    "context",
+    "compression",
+    "toon",
+    "prompt-engineering"
+  ],
+  "license": "MIT",
+  "optionalDependencies": {
+    "js-tiktoken": "^1.0.0"
+  },
+  "devDependencies": {}
+}
