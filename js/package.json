@@ -21,7 +21,7 @@
     "node": ">=18"
   },
   "scripts": {
-    "test": "node --test \"test/**/*.test.js\"",
+    "test": "node --test",
     "cli": "node bin/ctxshrink.mjs"
   },
   "keywords": [
